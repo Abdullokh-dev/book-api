@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -16,6 +19,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['book:write']],
     normalizationContext: ['groups' => ['book:read']]
 )]
+
+#[ApiFilter(SearchFilter::class, properties : [
+    'id' => 'exact',
+    'name' => 'partial',
+    'category' => 'exact'
+])]
+
+#[ApiFilter(OrderFilter::class, properties: ['id', 'name'])]
 class Book
 {
     #[ORM\Id]
